@@ -42,12 +42,7 @@ Each record includes:
 - Ensures unique posts (no duplicates)
 - Saves to CSV format
 
-### 2. Data Deduplication (`deduplicate.py`)
-- Removes duplicate posts while preserving all comments
-- Maintains data integrity
-- Provides statistics on data distribution
-
-### 3. LLM Analysis (`analyze.py`)
+### 2. LLM Analysis (`analyze.py`)
 Uses OpenAI's GPT-4 to analyze each post/comment for:
 - Decision context
 - Activity type
@@ -56,7 +51,7 @@ Uses OpenAI's GPT-4 to analyze each post/comment for:
 - Engagement level
 - Activity context
 
-### 4. Situational Drivers
+### 3. Situational Drivers
 Identifies key factors influencing decisions:
 1. Social Bonding
 2. Novelty/FOMO
@@ -68,6 +63,13 @@ Identifies key factors influencing decisions:
 8. Peer Influence
 9. Spontaneity
 10. External Stimulus
+
+## Data Files
+
+The project tracks the following data files in Git:
+- `data/reddit_data.csv`: Raw collected Reddit posts and comments
+- `data/weekend_activity_analysis.csv`: Results from LLM analysis
+- `data/test_data.csv`: Sample data for testing
 
 ## Setup
 
@@ -91,31 +93,40 @@ OPENAI_API_KEY=your_openai_api_key
 python -m chicago_weekend_activities.scrape
 ```
 
-2. Deduplicate data (if needed):
-```bash
-python -m chicago_weekend_activities.deduplicate
-```
-
-3. Run analysis:
+2. Run analysis:
 ```bash
 python -m chicago_weekend_activities.analyze
 ```
 
-## Output Files
-
-- `data/reddit_data.csv`: Raw collected data
-- `data/reddit_data_unique.csv`: Deduplicated data
-- `data/analysis_results.csv`: LLM analysis results
+The analysis script:
+- Processes posts in batches of 100
+- Saves progress after each batch
+- Shows detailed progress information
+- Can be safely interrupted and resumed
 
 ## Project Structure
 
 ```
 chicago_weekend_activities/
 ├── data/                   # Data storage
+│   ├── reddit_data.csv    # Raw Reddit data
+│   ├── weekend_activity_analysis.csv  # Analysis results
+│   └── test_data.csv      # Test data
 ├── specs.py               # Configuration parameters
 ├── scrape.py              # Data collection
-├── deduplicate.py         # Data cleaning
 ├── analyze.py             # LLM analysis
 ├── prompts.py             # LLM prompts and schemas
 └── README.md              # Project documentation
 ```
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details. 

@@ -1,6 +1,73 @@
-# Chicago Weekend Activities Twitter Analysis
+# Chicago Weekend Activities Research
 
-This project collects and analyzes Twitter data related to weekend activities in Chicago. It uses the Twitter API to gather tweets and provides tools for analyzing engagement patterns and content trends.
+This project analyzes Reddit discussions about weekend activities in Chicago to understand decision-making patterns and situational drivers behind activity choices.
+
+## Project Overview
+
+The research aims to:
+- Identify common weekend activities in Chicago
+- Understand factors influencing activity choices
+- Analyze decision-making patterns
+- Map temporal trends in activity planning
+- Identify key situational drivers
+
+## Data Collection
+
+### Source
+- Reddit posts and comments from r/chicago and r/AskChicago
+- Focus on posts discussing weekend plans, activities, and recommendations
+
+### Search Terms
+- "weekend plans"
+- "what to do"
+- "friday night"
+- "saturday"
+- "going out"
+- And other Chicago-specific activity terms
+
+### Data Structure
+Each record includes:
+- Post/comment content
+- Creation timestamp
+- Subreddit
+- Score (upvotes)
+- Search term match
+- Metadata (URLs, IDs)
+
+## Analysis Methodology
+
+### 1. Data Collection (`scrape.py`)
+- Collects posts and comments from target subreddits
+- Filters by search terms and date range
+- Ensures unique posts (no duplicates)
+- Saves to CSV format
+
+### 2. Data Deduplication (`deduplicate.py`)
+- Removes duplicate posts while preserving all comments
+- Maintains data integrity
+- Provides statistics on data distribution
+
+### 3. LLM Analysis (`analyze.py`)
+Uses OpenAI's GPT-4 to analyze each post/comment for:
+- Decision context
+- Activity type
+- Influencing factors
+- Sentiment
+- Engagement level
+- Activity context
+
+### 4. Situational Drivers
+Identifies key factors influencing decisions:
+1. Social Bonding
+2. Novelty/FOMO
+3. Convenience
+4. Cost/Value Sensitivity
+5. Affective State
+6. Weather-Driven
+7. Out-of-Character Behavior
+8. Peer Influence
+9. Spontaneity
+10. External Stimulus
 
 ## Setup
 
@@ -9,43 +76,46 @@ This project collects and analyzes Twitter data related to weekend activities in
 pip install -r requirements.txt
 ```
 
-2. Create a `.env` file in the project root with your Twitter API credentials:
+2. Configure environment variables in `.env`:
 ```
-TWITTER_API_KEY=your_api_key
-TWITTER_API_SECRET=your_api_secret
-TWITTER_ACCESS_TOKEN=your_access_token
-TWITTER_ACCESS_TOKEN_SECRET=your_access_token_secret
+REDDIT_CLIENT_ID=your_client_id
+REDDIT_CLIENT_SECRET=your_client_secret
+REDDIT_USER_AGENT=your_user_agent
+OPENAI_API_KEY=your_openai_api_key
 ```
 
 ## Usage
 
-### Data Collection
-
-To collect tweets:
+1. Collect data:
 ```bash
-python -m twitter.scrape
+python -m chicago_weekend_activities.scrape
 ```
 
-### Analysis
-
-To analyze collected tweets:
+2. Deduplicate data (if needed):
 ```bash
-python -m twitter.analyze
+python -m chicago_weekend_activities.deduplicate
 ```
+
+3. Run analysis:
+```bash
+python -m chicago_weekend_activities.analyze
+```
+
+## Output Files
+
+- `data/reddit_data.csv`: Raw collected data
+- `data/reddit_data_unique.csv`: Deduplicated data
+- `data/analysis_results.csv`: LLM analysis results
 
 ## Project Structure
 
-- `twitter/`: Main package directory
-  - `scrape.py`: Twitter data collection script
-  - `analyze.py`: Data analysis and visualization tools
-  - `specs.py`: Configuration settings and search terms
-- `requirements.txt`: Project dependencies
-- `.env`: Twitter API credentials (not tracked by git)
-
-## Features
-
-- Collects tweets based on Chicago-specific search terms
-- Analyzes tweet engagement metrics
-- Generates visualizations of tweet patterns
-- Handles rate limiting and error cases
-- Saves data in CSV format for further analysis 
+```
+chicago_weekend_activities/
+├── data/                   # Data storage
+├── specs.py               # Configuration parameters
+├── scrape.py              # Data collection
+├── deduplicate.py         # Data cleaning
+├── analyze.py             # LLM analysis
+├── prompts.py             # LLM prompts and schemas
+└── README.md              # Project documentation
+```

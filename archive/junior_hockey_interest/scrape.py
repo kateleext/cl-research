@@ -22,7 +22,6 @@ def scrape_reddit():
     )
 
     records = []
-    seen_post_ids = set()  # Track unique post IDs
 
     for subreddit in SUBREDDITS:
         print(f"Checking subreddit: r/{subreddit}")
@@ -36,11 +35,6 @@ def scrape_reddit():
                 for post in sub.search(search_term, limit=100):
                     if datetime.fromtimestamp(post.created_utc) <= time_filter:
                         continue
-
-                    # Skip if we've already seen this post
-                    if post.id in seen_post_ids:
-                        continue
-                    seen_post_ids.add(post.id)
 
                     # Main post as row
                     records.append({
@@ -77,20 +71,8 @@ def scrape_reddit():
         except Exception as e:
             print(f"Error scraping r/{subreddit}: {str(e)}")
 
-    # Convert to DataFrame and save
     df = pd.DataFrame(records)
-    
-    # Sort by creation date
-    df = df.sort_values('created_utc', ascending=False)
-    
-    # Save to CSV
-    output_path = 'reddit_data.csv'
-    df.to_csv(output_path, index=False)
-    print(f"\nScraping complete!")
-    print(f"Found {len(seen_post_ids)} unique posts")
-    print(f"Total records (posts + comments): {len(df)}")
-    print(f"Saved to {output_path}")
-    
+    print(f"Total records collected (posts + comments): {len(df)}")
     return df
 
 if __name__ == "__main__":

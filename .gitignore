@@ -32,6 +32,8 @@ ENV/
 *.swo
 
 # Data files
+!chicago_weekend_activities/data/*.csv
+!chicago_weekend_activities/data/*.json
 *.csv
 *.json
 *.xlsx
